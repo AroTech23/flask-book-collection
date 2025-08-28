@@ -1,0 +1,42 @@
+#The below shows how to Create, Update, Delete and Read data from databases
+#This is to create
+
+//Below is how to WRITE and note that we start by sending a query
+
+with app.app_context():
+   new_book= Book(id=1,title='Harry Potter',author='Arnold',rating='7.4')
+   db.session.add(new_book)
+   Book.commit()
+
+  //The below now is to READ from the table all the data
+with app.app_context():
+    result=db.session.execute(db.select(books).order_by(Book.title))
+    all_result=result.scalars()
+
+ //The one below now is to select a READ ONE ROW or entry from the database
+with app.app_context():
+    result=db.session.execute(db.select(books).where(Book.title=='Harry Potter'))
+    only_result=result.scalar()
+
+//Now, below is to update a row in the database
+with app.app_context():
+    result=db.session.execute(db.select(books).where(Book.title=='Harry Potter')).scalar()
+    result.title="Arnold's Book"
+    db.session.commit()
+
+
+//Now, This is to update using the primary key
+
+key_id=1
+with app.app_context():
+    result=db.session.execute(db.select(Book).where(Book.id==key_id)).scalar()
+    result.title="Harry Potter and the Goblet of Fire "
+    db.session.commit()
+
+//db.session.get(Book id) and db.get_or_404(Book, id),are basically the same thing just that if
+with db.Session there is no existing primary key as you mention, it is going to return None and you have to handle the
+error by yourself buf for get_or_404, if not found it is going to automatically raise a 404 error
+
+
+//Now, the below is to delete From the database Table
+
